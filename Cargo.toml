@@ -1,0 +1,12 @@
+[package]
+name = "kahan_pairs"
+version = "0.1.0"
+authors = ["Pixelstorm"]
+edition = "2021"
+description = "Generate pairs of integers"
+repository = "https://github.com/Pixelstormer/kahan_pairs"
+license = "Apache-2.0"
+keywords = ["math", "integers", "pairs", "kahan", "numbers"]
+categories = ["algorithms", "mathematics"]
+
+[dependencies]
