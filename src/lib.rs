@@ -160,8 +160,14 @@ pub fn try_nth_pair(n: u64) -> Option<(u64, u64)> {
 /// use std::num::NonZeroU64;
 /// use kahan_pairs::get_nth_pair;
 ///
-/// assert_eq!(get_nth_pair(NonZeroU64::new(100).unwrap()), (9, 6));
-/// assert_eq!(get_nth_pair(NonZeroU64::new(99_999).unwrap()), (318, 130));
+/// # fn main() {
+/// #   run().unwrap()
+/// # }
+/// # fn run() -> Option<()> {
+/// assert_eq!(get_nth_pair(NonZeroU64::new(100)?), (9, 6));
+/// assert_eq!(get_nth_pair(NonZeroU64::new(99_999)?), (318, 130));
+/// # Some(())
+/// # }
 /// ```
 #[inline(always)]
 pub fn get_nth_pair(n: NonZeroU64) -> (u64, u64) {
@@ -218,8 +224,14 @@ pub fn try_nth_pair_0(n: u64) -> Option<(u64, u64)> {
 /// use std::num::NonZeroU64;
 /// use kahan_pairs::get_nth_pair_0;
 ///
-/// assert_eq!(get_nth_pair_0(NonZeroU64::new(105).unwrap()), (13, 0));
-/// assert_eq!(get_nth_pair_0(NonZeroU64::new(99_999).unwrap()), (317, 129));
+/// # fn main() {
+/// #   run().unwrap()
+/// # }
+/// # fn run() -> Option<()> {
+/// assert_eq!(get_nth_pair_0(NonZeroU64::new(105)?), (13, 0));
+/// assert_eq!(get_nth_pair_0(NonZeroU64::new(99_999)?), (317, 129));
+/// # Some(())
+/// # }
 /// ```
 #[inline(always)]
 pub fn get_nth_pair_0(n: NonZeroU64) -> (u64, u64) {
