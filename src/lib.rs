@@ -7,6 +7,17 @@
 //! The results returned by this crate are correct for all values of `n` up to `2^52`.
 //! Results for values of `n` greater than that may be incorrect, due to floating point imprecision.
 //!
+//! # `no-std` support
+//!
+//! This crate has two features: `std` and `libm`. These features are
+//! [*mutually exclusive*](https://stackoverflow.com/questions/61769086/is-it-possible-for-a-cargo-feature-to-remove-a-dependency),
+//! and will cause a compile error if both are enabled simultaneously, or if neither are enabled.
+//!
+//! The `std` feature is enabled by default, and allows the crate to use the f64 [`sqrt`](f64::sqrt) and [`trunc`](f64::trunc) intrinsics, which are
+//! necessary for certain steps of the algorithm. If running in a `no-std` environment is desired, the `std` feature can be
+//! disabled, and the `libm` feature enabled, which will replace the use of the aforementioned intrinsics with the equivalent
+//! functions from [`libm`](https://crates.io/crates/libm).
+//!
 //! # Usage
 //!
 //! ```
@@ -49,7 +60,15 @@
 //! assert_eq!(nth_pair_0(99_999), (317, 129));
 //! ```
 
-use std::{iter::FusedIterator, num::NonZeroU64, ops::RangeFrom};
+#![cfg_attr(not(feature = "std"), no_std)]
+
+#[cfg(all(feature = "std", feature = "libm"))]
+compile_error!("Features 'std' and 'libm' are mutually exclusive");
+
+#[cfg(all(not(feature = "std"), not(feature = "libm")))]
+compile_error!("Either the 'std' or 'libm' feature must be enabled");
+
+use core::{iter::FusedIterator, num::NonZeroU64, ops::RangeFrom};
 
 /// Return an iterator that enumerates every unique pair of positive integers, excluding 0
 ///
@@ -278,13 +297,32 @@ impl FusedIterator for Pairs0 {}
 /// L(k) := integer part of (1/2 + √(2k-1))
 #[inline(always)]
 fn l(k: u64) -> u64 {
-    // This function involves converting `k` to an f64 and back again,
+    // This function involves converting `2 * k` to an f64 and back again,
     // and the largest integer that f64 can exactly represent is 2^53,
-    // so if `k` is larger than that, this function may return incorrect results
+    // so if `2 * k` is larger than that (i.e. if `k` is larger than 2^52),
+    // this function may return incorrect results
+
+    // There will still be a range of values for `k` above `2^52` where it still returns correct results,
+    // due to the not-quite-exact float value still being close enough to get truncated to the right value
+    // when converting back to an integer, but it's easier just to label `2^52` as the limit for correctness,
+    // rather than try to figure out where the exact theshhold for correct <-> incorrect truncation is
+
     let square = (k * 2) - 1;
-    let root = (square as f64).sqrt();
-    let result = root + 0.5;
-    result.trunc() as u64
+
+    #[cfg(feature = "std")]
+    {
+        let root = (square as f64).sqrt();
+        let result = root + 0.5;
+        result.trunc() as u64
+    }
+
+    #[cfg(feature = "libm")]
+    {
+        use libm::{sqrt, trunc};
+        let root = sqrt(square as f64);
+        let result = root + 0.5;
+        trunc(result) as u64
+    }
 }
 
 /// M(k) := k - (((L(k) - 1) * L(k)) / 2)
