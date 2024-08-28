@@ -1,10 +1,10 @@
 [package]
 name = "kahan_pairs"
 version = "1.0.0"
-authors = ["Pixelstorm"]
+authors = ["BigWingBeat"]
 edition = "2021"
 description = "Generate pairs of integers"
-repository = "https://github.com/Pixelstormer/kahan_pairs"
+repository = "https://github.com/BigWingBeat/kahan_pairs"
 license = "Apache-2.0"
 keywords = ["math", "integers", "pairs", "kahan", "numbers"]
 categories = ["algorithms", "mathematics", "data-structures", "no-std", "no-std::no-alloc"]
