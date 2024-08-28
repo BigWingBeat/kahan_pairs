@@ -317,7 +317,7 @@ fn l(k: u64) -> u64 {
     // There will still be a range of values for `k` above `2^52` where it still returns correct results,
     // due to the not-quite-exact float value still being close enough to get truncated to the right value
     // when converting back to an integer, but it's easier just to label `2^52` as the limit for correctness,
-    // rather than try to figure out where the exact theshhold for correct <-> incorrect truncation is
+    // rather than try to figure out where the exact threshhold for correct <-> incorrect truncation is
 
     let square = (k * 2) - 1;
 
