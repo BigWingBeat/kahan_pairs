@@ -1,6 +1,6 @@
 [package]
 name = "kahan_pairs"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["BigWingBeat"]
 edition = "2021"
 description = "Generate pairs of integers"
